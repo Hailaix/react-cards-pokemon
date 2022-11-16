@@ -1,6 +1,4 @@
-import React, { useState } from "react";
-import { v4 as uuid } from "uuid";
-import axios from "axios";
+import React from "react";
 import PokemonSelect from "./PokemonSelect";
 import PokemonCard from "./PokemonCard";
 import "./PokeDex.css";
@@ -10,16 +8,18 @@ import { useAxios } from "./hooks";
  * Can also add a new card at random,
  * or from a dropdown of available pokemon. */
 function PokeDex() {
-  // const [pokemon, setPokemon] = useState([]);
-  // const addPokemon = async name => {
-  //   const response = await axios.get(
-  //     `https://pokeapi.co/api/v2/pokemon/${name}/`
-  //   );
-  //   setPokemon(pokemon => [...pokemon, { ...response.data, id: uuid() }]);
-  // };
-  const [pokemon, newPokemon, reset] = useAxios("https://pokeapi.co/api/v2/pokemon");
-  const addPokemon = name => {
-    newPokemon(name);
+  const format = data => ({
+    front : data.sprites.front_default,
+    back : data.sprites.back_default,
+    name : data.name,
+    stats : data.stats.map(stat => ({
+      value: stat.base_stat,
+      name: stat.stat.name
+    }))
+  });
+  const [pokemon, newPokemon, reset] = useAxios("https://pokeapi.co/api/v2/pokemon", format);
+  const addPokemon = async name => {
+    await newPokemon(name);
   }
   return (
     <div className="PokeDex">
@@ -32,13 +32,10 @@ function PokeDex() {
         {pokemon.map(cardData => (
           <PokemonCard
             key={cardData.id}
-            front={cardData.sprites.front_default}
-            back={cardData.sprites.back_default}
+            front={cardData.front}
+            back={cardData.back}
             name={cardData.name}
-            stats={cardData.stats.map(stat => ({
-              value: stat.base_stat,
-              name: stat.stat.name
-            }))}
+            stats={cardData.stats}
           />
         ))}
       </div>

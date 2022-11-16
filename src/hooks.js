@@ -19,12 +19,17 @@ const useFlip = (initialState = true) => {
  * returns the array of data and the request function. request function can take an additional
  * endpoint for the baseUrl to request a different resource from the same API
  */
-const useAxios = (baseUrl) => {
+const useAxios = (baseUrl, format) => {
     const [data, setData] = useState([]);
 
-    const requestData = async ( endpoint = '' ) => {
-        const res = await axios.get(`${baseUrl}/${endpoint}`);
-        setData(data => [...data, { ...res.data, id: uuid() }]);
+    const requestData = async (endpoint = '') => {
+        try {
+            const res = await axios.get(`${baseUrl}/${endpoint}`);
+            const formattedRes = format(res.data);
+            setData(data => [...data, { ...formattedRes, id: uuid() }]);
+        } catch (e) {
+            console.error(e);
+        }
     }
     const resetData = () => {
         setData([]);
