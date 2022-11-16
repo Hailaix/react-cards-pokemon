@@ -14,19 +14,21 @@ const useFlip = (initialState = true) => {
     return [state, flipState];
 }
 
-const useAxios = (url) => {
-    // const [cards, setCards] = useState([]);
-    // const addCard = async () => {
-    //     const response = await axios.get(
-    //         "https://deckofcardsapi.com/api/deck/new/draw/"
-    //     );
-    //     setCards(cards => [...cards, { ...response.data, id: uuid() }]);
-    // };
+/**
+ * hook that performs an AJAX call to given url, adds response data to an array
+ * returns the array of data and the request function. request function can take an additional
+ * endpoint for the baseUrl to request a different resource from the same API
+ */
+const useAxios = (baseUrl) => {
     const [data, setData] = useState([]);
-    const requestData = async () => {
-        const res = await axios.get(url);
-        setData(data => [...data, {...res.data, id: uuid()}]);
+
+    const requestData = async ( endpoint = '' ) => {
+        const res = await axios.get(`${baseUrl}/${endpoint}`);
+        setData(data => [...data, { ...res.data, id: uuid() }]);
     }
-    return [data, requestData];
+    const resetData = () => {
+        setData([]);
+    }
+    return [data, requestData, resetData];
 }
 export { useFlip, useAxios };
