@@ -9,15 +9,15 @@ import { useAxios } from "./hooks";
  * or from a dropdown of available pokemon. */
 function PokeDex() {
   const format = data => ({
-    front : data.sprites.front_default,
-    back : data.sprites.back_default,
-    name : data.name,
-    stats : data.stats.map(stat => ({
+    front: data.sprites.front_default,
+    back: data.sprites.back_default,
+    name: data.name,
+    stats: data.stats.map(stat => ({
       value: stat.base_stat,
       name: stat.stat.name
     }))
   });
-  const [pokemon, newPokemon, reset] = useAxios("https://pokeapi.co/api/v2/pokemon", format);
+  const [pokemon, newPokemon, reset] = useAxios("https://pokeapi.co/api/v2/pokemon", 'pokemoncards', format);
   const addPokemon = async name => {
     await newPokemon(name);
   }

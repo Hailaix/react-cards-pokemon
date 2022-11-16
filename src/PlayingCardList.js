@@ -7,7 +7,7 @@ import { useAxios } from "./hooks";
  * Can also add a new card at random. */
 function CardTable() {
   const format = (data) => ({ image: data.cards[0].image });
-  const [cards, newCard, reset] = useAxios("https://deckofcardsapi.com/api/deck/new/draw", format);
+  const [cards, newCard, reset] = useAxios("https://deckofcardsapi.com/api/deck/new/draw", 'playingcards', format);
   const addCard = async () => {
     await newCard();
   }
